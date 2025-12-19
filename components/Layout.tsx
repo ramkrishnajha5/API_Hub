@@ -55,13 +55,13 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
             <a href="#/" className="flex items-center group z-50">
               {/* Light mode logo (white) */}
               <img
-                src="/assets/logo_white.jpg"
+                src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_white.jpg"
                 alt="API Hub"
                 className="h-10 md:h-12 lg:h-14 w-auto object-contain dark:hidden group-hover:scale-105 transition-transform"
               />
               {/* Dark mode logo (black) */}
               <img
-                src="/assets/logo_black.jpg"
+                src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_black.jpg"
                 alt="API Hub"
                 className="h-10 md:h-12 lg:h-14 w-auto object-contain hidden dark:block group-hover:scale-105 transition-transform"
               />
@@ -223,13 +223,13 @@ const Footer = () => {
             <a href="#/" className="flex items-center mb-6">
               {/* Light mode logo (white) */}
               <img
-                src="/assets/logo_white.jpg"
+                src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_white.jpg"
                 alt="API Hub"
                 className="h-12 lg:h-14 w-auto object-contain dark:hidden"
               />
               {/* Dark mode logo (black) */}
               <img
-                src="/assets/logo_black.jpg"
+                src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_black.jpg"
                 alt="API Hub"
                 className="h-12 lg:h-14 w-auto object-contain hidden dark:block"
               />
