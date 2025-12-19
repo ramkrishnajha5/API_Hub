@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://www.github.com/ramkrishnajha5/API_Hub/assets/logo_black.jpg" alt="API Hub Logo" width="200"/>
+  <img src="https://github.com/ramkrishnajha5/API_Hub/blob/main/assets/logo_black.jpg" alt="API Hub Logo" width="200"/>
   
   # 🚀 API Hub
   
@@ -283,7 +283,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <br/>
 
-**Made with ❤️ by [Ram Krishna Jha](https://instagram.com/ramkrishnajha)**
+**Made with ❤️ by [Ram Krishna Jha](https://instagram.com/ramkrishnajha5)**
 
 <br/>
 
