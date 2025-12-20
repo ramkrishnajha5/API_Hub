@@ -1,7 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ThemeToggle } from './ThemeToggle';
-import { Menu, X, Github, Mail, Zap, ArrowRight, Heart, Instagram, Star, Download } from '../constants';
+import { ApiDetailModal } from './ApiDetailModal';
+import { Menu, X, Github, Mail, Zap, ArrowRight, Heart, Instagram, Star, Download, Search, ExternalLink } from '../constants';
+import { fetchAllApis } from '../services/apiService';
+import { APIEntry } from '../types';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +13,18 @@ interface LayoutProps {
 const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<APIEntry[]>([]);
+  const [allApis, setAllApis] = useState<APIEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const lastSearchLength = useRef(0);
+
+  // Load APIs once
+  useEffect(() => {
+    fetchAllApis().then(setAllApis);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -20,10 +35,15 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
   // Close menu when clicking outside or pressing escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        setIsSearchOpen(false);
+        setSearchQuery('');
+        setSearchResults([]);
+      }
     };
 
-    if (isOpen) {
+    if (isOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleEscape);
     } else {
@@ -34,7 +54,65 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, isSearchOpen]);
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
+  const [showAllResults, setShowAllResults] = useState(false);
+  const [allSearchResults, setAllSearchResults] = useState<APIEntry[]>([]);
+  const [selectedSearchApi, setSelectedSearchApi] = useState<APIEntry | null>(null);
+
+  // Search logic - update after every 2 letters
+  useEffect(() => {
+    if (searchQuery.length >= 3) {
+      // Update results every 2 letters after initial 3
+      const shouldUpdate = searchQuery.length === 3 ||
+        Math.abs(searchQuery.length - lastSearchLength.current) >= 2;
+
+      if (shouldUpdate) {
+        setIsLoading(true);
+        lastSearchLength.current = searchQuery.length;
+
+        const query = searchQuery.toLowerCase();
+        const results = allApis.filter(api =>
+          api.API.toLowerCase().includes(query) ||
+          api.Category.toLowerCase().includes(query) ||
+          api.Description.toLowerCase().includes(query)
+        );
+
+        setAllSearchResults(results);
+        setSearchResults(showAllResults ? results : results.slice(0, 10));
+        setIsLoading(false);
+      }
+    } else {
+      setSearchResults([]);
+      setAllSearchResults([]);
+      lastSearchLength.current = 0;
+    }
+  }, [searchQuery, allApis, showAllResults]);
+
+  const handleSearchClick = () => {
+    setIsSearchOpen(true);
+  };
+
+  const closeSearch = () => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    setAllSearchResults([]);
+    setShowAllResults(false);
+    setSelectedSearchApi(null);
+  };
+
+  const handleShowMore = () => {
+    setShowAllResults(true);
+    setSearchResults(allSearchResults);
+  };
 
   const navLinks = [
     { href: '#/', label: 'Home', icon: <Zap className="w-5 h-5" /> },
@@ -46,8 +124,8 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white dark:bg-black ${scrolled
-        ? 'border-b border-slate-200/50 dark:border-white/10 py-3'
-        : 'py-5'
+        ? 'border-b border-slate-200/50 dark:border-white/10 py-1'
+        : 'py-2'
         }`}>
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
@@ -57,13 +135,13 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
               <img
                 src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_white.jpg"
                 alt="API Hub"
-                className="h-10 md:h-12 lg:h-14 w-auto object-contain dark:hidden group-hover:scale-105 transition-transform"
+                className="h-9 md:h-12 lg:h-14 w-auto object-contain dark:hidden group-hover:scale-105 transition-transform"
               />
               {/* Dark mode logo (black) */}
               <img
                 src="https://raw.githubusercontent.com/ramkrishnajha5/API_Hub/main/assets/logo_black.jpg"
                 alt="API Hub"
-                className="h-10 md:h-12 lg:h-14 w-auto object-contain hidden dark:block group-hover:scale-105 transition-transform"
+                className="h-9 md:h-12 lg:h-14 w-auto object-contain hidden dark:block group-hover:scale-105 transition-transform"
               />
             </a>
 
@@ -83,11 +161,37 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
 
               <div className="h-6 w-px bg-slate-200 dark:bg-white/10" />
 
+              {/* Tablet Search Icon (md to lg) */}
+              <button
+                onClick={handleSearchClick}
+                className="lg:hidden w-9 h-9 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-all"
+                aria-label="Search APIs"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+
+              {/* PC Search Button (lg and above) */}
+              <button
+                onClick={handleSearchClick}
+                className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/10 hover:bg-blue-50 dark:hover:bg-blue-500/10 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all"
+              >
+                <Search className="w-4 h-4" />
+                <span className="text-sm font-medium">Search APIs</span>
+              </button>
+
               <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             </div>
 
             {/* Mobile Navigation Toggle */}
             <div className="md:hidden flex items-center gap-2 z-50">
+              {/* Mobile Search Button */}
+              <button
+                onClick={handleSearchClick}
+                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-all"
+                aria-label="Search APIs"
+              >
+                <Search className="w-4 h-4" />
+              </button>
               <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -111,6 +215,114 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
           </div>
         </div>
       </nav>
+
+      {/* Search Overlay */}
+      <div
+        className={`fixed inset-0 z-[60] transition-all duration-300 ${isSearchOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          onClick={closeSearch}
+        />
+
+        {/* Search Container */}
+        <div className="absolute top-0 left-0 right-0 bg-white dark:bg-slate-900 shadow-2xl">
+          <div className="max-w-2xl mx-auto px-4 py-4">
+            {/* Search Input - Smaller */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search APIs..."
+                className="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-800 border-0 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              />
+              <button
+                onClick={closeSearch}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Search Hint */}
+            {searchQuery.length > 0 && searchQuery.length < 3 && (
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Type at least 3 characters to search...
+              </p>
+            )}
+
+            {/* Search Results */}
+            {searchResults.length > 0 && (
+              <div className="mt-3 max-h-[50vh] overflow-y-auto space-y-1 custom-scrollbar">
+                {searchResults.map((api, index) => (
+                  <div
+                    key={`${api.API}-${index}`}
+                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all group"
+                  >
+                    <div
+                      className="flex-1 min-w-0 pr-3 cursor-pointer"
+                      onClick={() => setSelectedSearchApi(api)}
+                    >
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <h4 className="font-semibold text-sm text-slate-900 dark:text-white truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                          {api.API}
+                        </h4>
+                        <span className="shrink-0 px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded">
+                          {api.Category}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                        {api.Description}
+                      </p>
+                    </div>
+                    <a
+                      href={api.Link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 flex items-center gap-1 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-all"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                ))}
+
+                {/* Show More Button */}
+                {!showAllResults && allSearchResults.length > 10 && (
+                  <button
+                    onClick={handleShowMore}
+                    className="w-full mt-2 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 rounded-lg transition-all"
+                  >
+                    Show More ({allSearchResults.length - 10} more results)
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* No Results */}
+            {searchQuery.length >= 3 && searchResults.length === 0 && !isLoading && (
+              <div className="mt-4 text-center py-4">
+                <Search className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  No APIs found for "{searchQuery}"
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* API Detail Modal for Search Results */}
+      <ApiDetailModal
+        api={selectedSearchApi}
+        isOpen={!!selectedSearchApi}
+        onClose={() => setSelectedSearchApi(null)}
+        isMobile={window.innerWidth < 768}
+      />
 
       {/* Mobile Menu Overlay */}
       <div
