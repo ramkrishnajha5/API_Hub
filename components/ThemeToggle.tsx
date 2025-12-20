@@ -11,7 +11,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, toggleTheme }) 
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-7 md:w-16 md:h-8 rounded-full p-1 transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 group overflow-hidden"
+      className="relative w-12 h-6 md:w-14 md:h-7 rounded-full p-1 transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 group overflow-hidden"
       style={{
         background: theme === 'dark'
           ? 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%)'
@@ -34,15 +34,15 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, toggleTheme }) 
 
       {/* Toggle Circle with Icon */}
       <div
-        className={`absolute top-0.5 md:top-1 w-5 h-5 md:w-6 md:h-6 rounded-full shadow-lg transition-all duration-500 ease-out flex items-center justify-center ${theme === 'dark'
-            ? 'translate-x-7 md:translate-x-8 bg-slate-800 shadow-blue-500/20'
-            : 'translate-x-0 bg-yellow-300 shadow-orange-300/50'
+        className={`absolute top-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full shadow-lg transition-all duration-500 ease-out flex items-center justify-center ${theme === 'dark'
+          ? 'translate-x-6 md:translate-x-7 bg-slate-800 shadow-blue-500/20'
+          : 'translate-x-0.5 bg-yellow-300 shadow-orange-300/50'
           }`}
       >
         {theme === 'dark' ? (
-          <Moon className="w-3 h-3 md:w-3.5 md:h-3.5 text-blue-300" />
+          <Moon className="w-2.5 h-2.5 md:w-3 md:h-3 text-blue-300" />
         ) : (
-          <Sun className="w-3 h-3 md:w-3.5 md:h-3.5 text-orange-500" />
+          <Sun className="w-2.5 h-2.5 md:w-3 md:h-3 text-orange-500" />
         )}
       </div>
 
