@@ -4,12 +4,11 @@ import { fetchAllApis } from '../services/apiService';
 import { APIEntry } from '../types';
 import { ApiCard } from '../components/ApiCard';
 import { ApiDetailModal } from '../components/ApiDetailModal';
-import { Search, CATEGORY_ICONS, DEFAULT_ICON, LayoutGrid, Zap, Sparkles, TrendingUp, Globe2 } from '../constants';
+import { CATEGORY_ICONS, DEFAULT_ICON, LayoutGrid, Zap, Sparkles, TrendingUp, Globe2 } from '../constants';
 
 export const HomePage: React.FC = () => {
   const [apis, setApis] = useState<APIEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [showAuthOnly, setShowAuthOnly] = useState(false);
   const [sortBy, setSortBy] = useState<'name' | 'category'>('name');
@@ -44,13 +43,9 @@ export const HomePage: React.FC = () => {
 
   const filteredApis = useMemo(() => {
     let filtered = apis.filter(api => {
-      const matchesSearch =
-        api.API.toLowerCase().includes(search.toLowerCase()) ||
-        api.Description.toLowerCase().includes(search.toLowerCase()) ||
-        api.Category.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || api.Category === selectedCategory;
       const matchesAuth = !showAuthOnly || (api.Auth !== "");
-      return matchesSearch && matchesCategory && matchesAuth;
+      return matchesCategory && matchesAuth;
     });
 
     if (sortBy === 'name') {
@@ -60,7 +55,7 @@ export const HomePage: React.FC = () => {
     }
 
     return filtered;
-  }, [apis, search, selectedCategory, showAuthOnly, sortBy]);
+  }, [apis, selectedCategory, showAuthOnly, sortBy]);
 
   const stats = useMemo(() => ({
     total: apis.length,
@@ -115,24 +110,6 @@ export const HomePage: React.FC = () => {
           <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium px-4">
             The most comprehensive catalog of public APIs. Curated, organized, and ready for your next breakthrough project.
           </p>
-
-          {/* Search Bar - Fixed without the glow box */}
-          <div className="relative max-w-2xl mx-auto px-4">
-            <div className="flex items-center bg-white dark:bg-slate-900/90 rounded-2xl p-2 shadow-xl shadow-slate-200/50 dark:shadow-black/30 border border-slate-200 dark:border-white/10">
-              <Search className="ml-4 w-5 h-5 sm:w-6 sm:h-6 text-slate-400 flex-shrink-0" />
-              <input
-                type="text"
-                placeholder="Search APIs by name, category, or description..."
-                className="w-full bg-transparent border-0 px-3 sm:px-4 py-3 sm:py-4 text-sm sm:text-base md:text-lg outline-none dark:text-white placeholder:text-slate-400 font-medium"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <button className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all flex-shrink-0">
-                <Search className="w-4 h-4" />
-                <span className="hidden md:inline">Search</span>
-              </button>
-            </div>
-          </div>
 
           {/* Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-12 max-w-3xl mx-auto px-4">
@@ -279,14 +256,14 @@ export const HomePage: React.FC = () => {
             ) : (
               <div className="bg-white dark:bg-slate-900/50 p-12 md:p-20 rounded-[2rem] text-center border-2 border-dashed border-slate-200 dark:border-white/10">
                 <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <Search className="w-8 h-8 md:w-10 md:h-10 text-blue-500" />
+                  <LayoutGrid className="w-8 h-8 md:w-10 md:h-10 text-blue-500" />
                 </div>
                 <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-3">No APIs Found</h3>
                 <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base mb-8 max-w-md mx-auto">
-                  Try adjusting your search terms or switching to a different category.
+                  Try switching to a different category or adjusting your filters.
                 </p>
                 <button
-                  onClick={() => { setSearch(''); setSelectedCategory('All'); setShowAuthOnly(false); }}
+                  onClick={() => { setSelectedCategory('All'); setShowAuthOnly(false); }}
                   className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all"
                 >
                   Clear All Filters
