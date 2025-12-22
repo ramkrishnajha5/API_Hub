@@ -56,6 +56,15 @@ const Navbar = ({ theme, toggleTheme }: { theme: 'light' | 'dark', toggleTheme: 
     };
   }, [isOpen, isSearchOpen]);
 
+  // Listen for openSearch event from HomePage
+  useEffect(() => {
+    const handleOpenSearch = () => {
+      setIsSearchOpen(true);
+    };
+    window.addEventListener('openSearch', handleOpenSearch);
+    return () => window.removeEventListener('openSearch', handleOpenSearch);
+  }, []);
+
   // Focus input when search opens
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
