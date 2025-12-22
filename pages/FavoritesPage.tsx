@@ -90,10 +90,6 @@ export const FavoritesPage: React.FC = () => {
             <div className="max-w-[1400px] mx-auto relative z-10">
                 {/* Header - Blue theme */}
                 <div className="text-center mb-12 md:mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-                        <Star className="w-4 h-4 text-blue-500 fill-current" />
-                        <span className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wider uppercase">Your Collection</span>
-                    </div>
                     <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
                         Favorite <span className="text-gradient bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">APIs</span>
                     </h1>
