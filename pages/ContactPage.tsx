@@ -103,10 +103,6 @@ export const ContactPage: React.FC = () => {
       <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-            <MessageSquare className="w-4 h-4 text-blue-500" />
-            <span className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wider uppercase">Get in Touch</span>
-          </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
             Let's <span className="text-gradient bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Connect</span>
           </h1>
