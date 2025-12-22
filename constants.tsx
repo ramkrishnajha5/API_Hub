@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   PawPrint, DollarSign, CloudSun, HeartPulse, Cpu, Gamepad2,
@@ -12,7 +11,7 @@ import {
   Users, TrendingUp, Utensils, Award, Microscope, Link2,
   Car, Film, Thermometer, TestTube, FileSearch, Package,
   Smartphone, Image, ScrollText, Building2, Heart, Sparkles,
-  Trash2, Download
+  Trash2, Download, ChevronDown
 } from 'lucide-react';
 
 
@@ -94,5 +93,5 @@ export {
   Plane, Bug, Palette, Shield, Users, TrendingUp, Utensils, Award,
   Microscope, Link2, Car, Film, Thermometer, TestTube, FileSearch,
   Package, Smartphone, Image, ScrollText, Building2, Heart, Sparkles,
-  Newspaper, ShoppingCart, Trash2, Download
+  Newspaper, ShoppingCart, Trash2, Download, ChevronDown
 };
