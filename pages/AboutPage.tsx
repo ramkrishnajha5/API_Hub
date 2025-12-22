@@ -31,8 +31,8 @@ export const AboutPage: React.FC = () => {
   ];
 
   const stats = [
-    { value: '430+', label: 'Public APIs', icon: <Globe2 className="w-5 h-5" /> },
-    { value: '50+', label: 'Categories', icon: <Library className="w-5 h-5" /> },
+    { value: '320+', label: 'Public APIs', icon: <Globe2 className="w-5 h-5" /> },
+    { value: '48', label: 'Categories', icon: <Library className="w-5 h-5" /> },
     { value: '100%', label: 'Free to Use', icon: <Zap className="w-5 h-5" /> },
     { value: '24/7', label: 'Available', icon: <TrendingUp className="w-5 h-5" /> },
   ];
@@ -63,20 +63,15 @@ export const AboutPage: React.FC = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-                <Sparkles className="w-4 h-4 text-blue-500" />
-                <span className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wider uppercase">About API Hub</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white mb-6 tracking-tight leading-[1.1]">
-                Redefining
+                Your One-Stop
                 <span className="block text-gradient bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
-                  API Discovery
+                  API Directory
                 </span>
               </h1>
 
               <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg mb-8 font-medium">
-                API Hub was born from a simple frustration: the internet is full of powerful APIs, but finding them shouldn't be a chore. We've built a comprehensive registry to help developers discover the perfect API for their projects.
+                API Hub makes it easy to find free public APIs for your projects. Browse, search, and discover APIs across 48+ categories - all in one place.
               </p>
 
               <div className="flex flex-wrap items-center gap-4">
@@ -211,7 +206,7 @@ export const AboutPage: React.FC = () => {
                 Ready to Build Something Amazing?
               </h2>
               <p className="text-slate-500 dark:text-slate-400 text-lg mb-8 max-w-xl mx-auto">
-                Start exploring our collection of 430+ free public APIs and bring your ideas to life.
+                Start exploring our collection of 320+ free public APIs and bring your ideas to life.
               </p>
               <a href="#/" className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-xl hover:shadow-blue-500/30 transition-all text-lg">
                 Start Exploring <ArrowRight className="w-5 h-5" />
