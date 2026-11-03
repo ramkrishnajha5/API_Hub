@@ -239,6 +239,7 @@ const COMPLETE_API_REGISTRY: APIEntry[] = [
 
   // === PERSONALITY ===
   { API: "Advice Slip", Description: "Generate random advice slips", Auth: "", HTTPS: true, Cors: "unknown", Link: "http://api.adviceslip.com/", Category: "Personality" },
+  { API: "Bucketlist Dream of the Day", Description: "Daily travel and experience inspiration; Dutch/Netherlands defaults with optional filters", Auth: "", HTTPS: true, Cors: "yes", Link: "https://bucketlist.nl/brand/droom-van-de-dag.openapi.json", Category: "Personality" },
   { API: "icanhazdadjoke", Description: "Largest selection of dad jokes", Auth: "", HTTPS: true, Cors: "unknown", Link: "https://icanhazdadjoke.com/api", Category: "Personality" },
   { API: "Kanye.rest", Description: "Random Kanye West quotes", Auth: "", HTTPS: true, Cors: "yes", Link: "https://kanye.rest", Category: "Personality" },
   { API: "Quotable", Description: "Quotable is a free quotes API", Auth: "", HTTPS: true, Cors: "unknown", Link: "https://github.com/lukePeavey/quotable", Category: "Personality" },
